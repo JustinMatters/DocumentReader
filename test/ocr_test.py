@@ -120,5 +120,8 @@ class TestGetParallelogramDimensions:
 
 class TestUnwarpQuadrilateral:
     """Test class for ocr.unwarp_quadrilateral (no tests for reason 2 above)"""
+    pass
 
+class TestImproveImageQuality:
+    """Test class for ocr.improve_image_quality (no tests for reason 3 above)"""
     pass

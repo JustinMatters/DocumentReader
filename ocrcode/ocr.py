@@ -205,6 +205,55 @@ def unwarp_quadrilateral(image: np.array, quad: np.array, margin=1,) -> np.array
     # imgCropped = cv2.resize(imgCropped,(widthImg,heightImg))
     return cropped_image
 
+def improve_image_quality(image:np.array, threshold:str='simple')->np.array:
+    """ improve the image quality for processing by OCR
+
+    Args:
+        image (np.array): input image containing text
+        threshold (str, optional): threshold method, uses a string to 
+            pick to avoid invalid methods being passed. Options are:
+            "simple": generally prefered for simple images
+            "adaptive": may help with local shodowing
+            "otsu": useful for bimodal images eg poor exposure
+            Defaults to "simple".
+
+    Returns:
+        np.array: image optimised for OCR
+    """
+    # greyscale rectified image
+    grey_image = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
+    # magnify thie image before processing
+    large_image = cv2.resize(
+        grey_image, 
+        dsize=None, 
+        fx=2, 
+        fy=2, 
+        interpolation=cv2.INTER_CUBIC
+    )
+    # denoise with a median blur
+    median_image = cv2.medianBlur(large_image, ksize=3)
+    cv2.imshow("medianblur",median_image)
+    # threshhold image see https://stackoverflow.com/questions/28763419/
+    if threshold == "adaptive":
+        threshold_image = cv2.adaptiveThreshold(
+            median_image, 
+            maxValue = 255, 
+            adaptiveMethod = cv2.ADAPTIVE_THRESH_GAUSSIAN_C, 
+            thresholdType= cv2.THRESH_BINARY, 
+            blockSize = 31, 
+            C= 2
+        )
+    elif threshold == "otsu":
+        threshold_image = cv2.threshold(
+            median_image, 
+            0, 
+            255, 
+            cv2.THRESH_BINARY + cv2.THRESH_OTSU
+        )[1]
+    else:
+        threshold_image = cv2.threshold(median_image,127,255,cv2.THRESH_BINARY)[1]
+    cv2.imshow("threshold",threshold_image)
+    return threshold_image
 
 if __name__ == "__main__":
     # we have no cause to run this file directly currently
