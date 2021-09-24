@@ -1,8 +1,19 @@
+"""Test suite for ocrcode. Note that not all functions are tested.
+Tests are implemented where:
+    1) The function has a resonable chance of failure on complexity grounds
+    2) The function implments logic rather than recapitulating library functions
+    3) the functionality can be tested with test data of reasonable size
+Placeholder test classes exist for untested functions to allow future test
+implementation
+"""
 import pytest
 from ocrcode import ocr
 import cv2
 import numpy as np
 
+class TestGetPaths:
+    """Test Class for ocr.get_paths (no tests for reason 2 above)"""
+    pass
 
 class TestScaleLongestAxis:
     """Test Class for ocr.scale_longest_axis"""
@@ -31,3 +42,37 @@ class TestScaleLongestAxis:
         function_out = ocr.scale_longest_axis(image=image_in, new_size=scale)
         # check the output shapes are correct
         assert expected_out.shape == function_out.shape
+
+class TestPreprocessImage:
+    """Test Class for preprocess_image (no tests for reason 2 above)"""
+    pass
+
+class TestGetContourFromMask:
+    """Test Class for get_contour_from_mask (no tests for reason 3 above)"""
+    pass
+
+class TestOrderQuadrilateral:
+    """"Test clas for oder_quadrilateral"""
+    @pytest.mark.parametrize(
+        "quad_in,expected_quad",
+        [
+            (
+                # trivial values already ordered
+                np.array([[[0,0]],[[1,0]],[[0,1]],[[1,1]]]),
+                np.array([[[0,0]],[[1,0]],[[0,1]],[[1,1]]])
+            ),
+            (
+                # trivial values
+                np.array([[[0,1]],[[1,0]],[[1,1]],[[0,0]]]),
+                np.array([[[0,0]],[[1,0]],[[0,1]],[[1,1]]])
+            ),
+            (
+                # non-trivial values
+                np.array([[[241,105]],[[62,149]],[[126,429]],[[308,388]]]),
+                np.array([[[62,149]],[[241,105]],[[126,429]],[[308,388]]])
+            )
+        ]
+    )
+    def test_correct_reordering(self,quad_in,expected_quad):
+        # comparing np.arrays with == you get an array returned so use .all()
+        assert (expected_quad == ocr.order_quadrilateral(quad=quad_in)).all()
