@@ -4,10 +4,10 @@
 import cv2
 import numpy as np
 from ocrcode import ocr
+import pytesseract
 
 # set up constants to help with openCV's magic numbers
 WAIT_UNTIL_PRESSED = 0
-
 # set up constants for parameterising the OCR process
 # resizing
 PROCESSING_SIZE = 2048
@@ -22,11 +22,18 @@ EPSILON = 0.02
 # contrast and brightness controls
 CONTRAST = 1.3
 BRIGHTNESS =  10
+# pytesseract path (for interoperability) 
+# May be set to set None if PATH variable is set on system
+# see https://stackoverflow.com/questions/50655738/
+TESSERACT_PATH = 'C:\\Program Files\\Tesseract-OCR\\tesseract.exe'
 
 if __name__ == "__main__":
 
+    # point pytesseract at its install location if required
+    if TESSERACT_PATH is not None:
+        pytesseract.pytesseract.tesseract_cmd = TESSERACT_PATH
     # get our list of paths
-    paths = ocr.get_paths("data/jmbusinesscard.jpg")  # , 'data/business card.jpg')
+    paths = ocr.get_paths("data/jmbusinesscard.jpg") #, 'data/business card.jpg')
     # cycle through our paths
     for full_path in paths:
         # open file
@@ -73,10 +80,10 @@ if __name__ == "__main__":
 
         # text detection (fast and avoids trying to detect non existent text)
 
-        # get contours
 
         # pass to tesseract for OCR
-
+        ocr_text = pytesseract.image_to_string(clean_paper, lang="eng")
+        print (ocr_text[:-1])
         # output OCRed text
 
         # TEMP display codes
@@ -90,3 +97,4 @@ if __name__ == "__main__":
         #cv2.imshow("clean_image", clean_paper)
         cv2.waitKey(WAIT_UNTIL_PRESSED)
         # cv2.destroyAllWindows()
+        #print (ocr_text)
