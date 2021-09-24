@@ -1,7 +1,7 @@
 """Test suite for ocrcode. Note that not all functions are tested.
 Tests are implemented where:
     1) The function has a resonable chance of failure on complexity grounds
-    2) The function implments logic rather than recapitulating library functions
+    2) The function implements logic rather than just chaining library functions
     3) the functionality can be tested with test data of reasonable size
 Placeholder test classes exist for untested functions to allow future test
 implementation
@@ -11,12 +11,15 @@ from ocrcode import ocr
 import cv2
 import numpy as np
 
+
 class TestGetPaths:
-    """Test Class for ocr.get_paths (no tests for reason 2 above)"""
+    """Test class for ocr.get_paths (no tests for reason 2 above)"""
+
     pass
 
+
 class TestScaleLongestAxis:
-    """Test Class for ocr.scale_longest_axis"""
+    """Test class for ocr.scale_longest_axis"""
 
     @pytest.mark.parametrize(
         # remember numpy arrays are h*w*d or y*x*d
@@ -43,36 +46,79 @@ class TestScaleLongestAxis:
         # check the output shapes are correct
         assert expected_out.shape == function_out.shape
 
+
 class TestPreprocessImage:
-    """Test Class for preprocess_image (no tests for reason 2 above)"""
+    """Test class for ocr.preprocess_image (no tests for reason 2 above)"""
+
     pass
+
 
 class TestGetContourFromMask:
-    """Test Class for get_contour_from_mask (no tests for reason 3 above)"""
+    """Test class for ocr.get_contour_from_mask (no tests for reason 3 above)"""
+
     pass
 
+
 class TestOrderQuadrilateral:
-    """"Test clas for oder_quadrilateral"""
+    """"Test class for ocr.order_quadrilateral"""
+
     @pytest.mark.parametrize(
         "quad_in,expected_quad",
         [
             (
                 # trivial values already ordered
-                np.array([[[0,0]],[[1,0]],[[0,1]],[[1,1]]]),
-                np.array([[[0,0]],[[1,0]],[[0,1]],[[1,1]]])
+                np.array([[[0, 0]], [[1, 0]], [[0, 1]], [[1, 1]]]),
+                np.array([[[0, 0]], [[1, 0]], [[0, 1]], [[1, 1]]]),
             ),
             (
                 # trivial values
-                np.array([[[0,1]],[[1,0]],[[1,1]],[[0,0]]]),
-                np.array([[[0,0]],[[1,0]],[[0,1]],[[1,1]]])
+                np.array([[[0, 1]], [[1, 0]], [[1, 1]], [[0, 0]]]),
+                np.array([[[0, 0]], [[1, 0]], [[0, 1]], [[1, 1]]]),
             ),
             (
                 # non-trivial values
-                np.array([[[241,105]],[[62,149]],[[126,429]],[[308,388]]]),
-                np.array([[[62,149]],[[241,105]],[[126,429]],[[308,388]]])
-            )
-        ]
+                np.array([[[241, 105]], [[62, 149]], [[126, 429]], [[308, 388]]]),
+                np.array([[[62, 149]], [[241, 105]], [[126, 429]], [[308, 388]]]),
+            ),
+        ],
     )
-    def test_correct_reordering(self,quad_in,expected_quad):
+    def test_correct_reordering(self, quad_in, expected_quad):
         # comparing np.arrays with == you get an array returned so use .all()
         assert (expected_quad == ocr.order_quadrilateral(quad=quad_in)).all()
+
+
+class TestGetParallelogramDimensions:
+    """Test class for ocr.get_parallelogram_dimensions"""
+
+    @pytest.mark.parametrize(
+        "quad_in,expected_width,expected_height",
+        [
+            (
+                # trivial values, remember opencv goes height, width!
+                np.array([[[0, 0]], [[1, 0]], [[0, 2]], [[1, 2]]]),
+                1,
+                2,
+            ),
+            (
+                # offset trivial values, remember opencv goes height, width!
+                np.array([[[10, 10]], [[11, 10]], [[10, 12]], [[11, 12]]]),
+                1,
+                2,
+            ),
+            (
+                # pythagorean triangle test, remember opencv goes height, width!
+                np.array([[[5, 10]], [[2,14 ]], [[9,13]], [[6,17]]]),
+                5,
+                5,
+            )
+        ],
+    )
+    def test_correct_measurement(self, quad_in, expected_width, expected_height):
+        height, width = ocr.get_parallelogram_dimensions(quad=quad_in)
+        assert expected_width == width and expected_height == height
+
+
+class TestUnwarpQuadrilateral:
+    """Test class for ocr.unwarp_quadrilateral (no tests for reason 2 above)"""
+
+    pass
