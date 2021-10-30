@@ -107,10 +107,10 @@ class TestGetParallelogramDimensions:
             ),
             (
                 # pythagorean triangle test, remember opencv goes height, width!
-                np.array([[[5, 10]], [[2,14 ]], [[9,13]], [[6,17]]]),
+                np.array([[[5, 10]], [[2, 14]], [[9, 13]], [[6, 17]]]),
                 5,
                 5,
-            )
+            ),
         ],
     )
     def test_correct_measurement(self, quad_in, expected_width, expected_height):
@@ -120,8 +120,11 @@ class TestGetParallelogramDimensions:
 
 class TestUnwarpQuadrilateral:
     """Test class for ocr.unwarp_quadrilateral (no tests for reason 2 above)"""
+
     pass
+
 
 class TestImproveImageQuality:
     """Test class for ocr.improve_image_quality (no tests for reason 3 above)"""
+
     pass
