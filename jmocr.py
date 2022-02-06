@@ -35,7 +35,7 @@ if __name__ == "__main__":
     if TESSERACT_PATH is not None:
         pytesseract.pytesseract.tesseract_cmd = TESSERACT_PATH
     # get our list of paths
-    paths = ocr.get_paths("data/jmbusinesscard.jpg", "data/business card.jpg")
+    paths = ocr.get_paths("data\\jmbusinesscard.jpg", "data\\business card.jpg")
     # cycle through our paths
     for full_path in paths:
         # open file
