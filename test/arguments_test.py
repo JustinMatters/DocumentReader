@@ -1,14 +1,6 @@
-"""Test suite for ocrcode. Note that not all functions are tested.
-Tests are implemented where:
-    1) The function has a resonable chance of failure on complexity grounds
-    2) The function implements logic rather than just chaining library functions
-    3) the functionality can be tested with test data of reasonable size
-Placeholder test classes exist for untested functions to allow future test
-implementation
-"""
-from cv2 import exp
+"""Test suite for arguments.py"""
+
 from mock import patch
-import os
 import pytest
 from ocrcode import arguments
 
