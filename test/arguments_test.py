@@ -102,7 +102,7 @@ class TestPathsToFiles:
     @patch('os.listdir')
     @patch('os.path.isdir')
     @patch('os.path.isfile')
-    def test_returns_list_if_valid_dir_but_not_image(
+    def test_returns_empty_list_if_valid_dir_but_not_image(
         self, 
         mock_isfile, 
         mock_isdir,
