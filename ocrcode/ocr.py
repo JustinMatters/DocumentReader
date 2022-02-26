@@ -23,10 +23,6 @@ def get_paths(*file_names: str):
         return files_list
     else:
         raise FileNotFoundError("No valid input image files specified")
-        # # TBD for now default to returning our test image
-        # file_name = "data/business card.jpg"
-        # full_path = os.path.abspath(file_name)
-        # return [full_path]
 
 
 def scale_longest_axis(image: np.array, new_size=512) -> np.array:
