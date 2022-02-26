@@ -4,9 +4,11 @@
 import cv2
 import numpy as np
 import pytesseract
+import sys
 
 # import our helpers
 from ocrcode import ocr
+from ocrcode import arguments
 
 # set up constants to help with openCV's magic numbers
 WAIT_UNTIL_PRESSED = 0
@@ -30,12 +32,20 @@ BRIGHTNESS = 10
 TESSERACT_PATH = "C:\\Program Files\\Tesseract-OCR\\tesseract.exe"
 
 if __name__ == "__main__":
+    # ingest our program parameters
+    paths, save_path, verbose, tesseract = arguments.argument_parser(sys.argv[1:])
+    paths = arguments.paths_to_files(paths)
+    # save directory defaults to cwd if -s specified without directory
+    save_path = arguments.validate_save(save_path)
+    tesseract = arguments.validate_tesseract(tesseract)
 
-    # point pytesseract at its install location if required
-    if TESSERACT_PATH is not None:
+    # point pytesseract at custom install location if required
+    if tesseract is not None:
+        pytesseract.pytesseract.tesseract_cmd = tesseract
+    else:
         pytesseract.pytesseract.tesseract_cmd = TESSERACT_PATH
     # get our list of paths
-    paths = ocr.get_paths("data\\jmbusinesscard.jpg", "data\\business card.jpg")
+    paths = ocr.get_paths(*paths)
     # cycle through our paths
     for full_path in paths:
         # open file
@@ -50,7 +60,8 @@ if __name__ == "__main__":
             threshold_low=THRESHOLD_LOW,
             kernel_size=KERNEL_SIZE,
         )
-        cv2.imshow("preprocessed_image", preprocessed_image)
+        if verbose:
+            cv2.imshow("preprocessed_image", preprocessed_image)
         contour_check = np.copy(scaled_image)
         # get our largest quadrilateral contour
         paper_contour = ocr.get_contour_from_mask(
@@ -58,12 +69,15 @@ if __name__ == "__main__":
             min_area=MIN_AREA,
             epsilon=EPSILON,
             contour_check=contour_check,
+            verbose = verbose
         )
-        print(paper_contour)
+        if verbose:
+            print(paper_contour)
 
         # make sure we have our points in the correct order for the transformation
         ordered_paper_contour = ocr.order_quadrilateral(quad=paper_contour)
-        print(ordered_paper_contour)
+        if verbose:
+            print(ordered_paper_contour)
         # apply transformation to image
         unwarped_paper = ocr.unwarp_quadrilateral(
             image=scaled_image,
@@ -80,24 +94,23 @@ if __name__ == "__main__":
             beta=0,
             gamma=BRIGHTNESS,
         )
-        cv2.imshow("test_image", levelled_image)
+        if verbose:
+            cv2.imshow("test_image", levelled_image)
         # COULD SAVE IMAGE TO DISC HERE
 
-        clean_paper = ocr.improve_image_quality(image=levelled_image)
+        clean_paper = ocr.improve_image_quality(image=levelled_image, verbose = verbose)
 
         # TBD text detection (fast and avoids trying to detect non existent text)
 
         # pass to tesseract for OCR
         ocr_text = pytesseract.image_to_string(clean_paper, lang="eng")
-
-        # TBD QR code detect and read
+        
+        if verbose:
+            print(preprocessed_image.shape)
+            print(type(preprocessed_image))
 
         # output OCRed text
-
-        # TEMP display codes
         print(ocr_text)
-        print(preprocessed_image.shape)
-        print(type(preprocessed_image))
 
         cv2.waitKey(WAIT_UNTIL_PRESSED)
         # cv2.destroyAllWindows()
