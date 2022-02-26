@@ -25,7 +25,7 @@ def argument_parser(args):
         metavar="N",
         type=str,
         nargs="*",  # ? is zero or one, * is zero or more, + is one or more
-        help="File or folder paths. If not specified, will read files from /data",
+        help="File or folder paths. Files must be jpg, png or gif",
     )
     parser.add_argument(
         "-s",
