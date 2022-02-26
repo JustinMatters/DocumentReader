@@ -96,11 +96,7 @@ def preprocess_image(
 
 
 def get_contour_from_mask(
-    mask: np.array,
-    min_area: int,
-    epsilon: int, 
-    contour_check: np.array,
-    verbose = True,
+    mask: np.array, min_area: int, epsilon: int, contour_check: np.array, verbose=True,
 ) -> np.array:
     """takes a black and white input image and returns the largest continuous
     quadrilateral contour found
@@ -218,7 +214,9 @@ def unwarp_quadrilateral(image: np.array, quad: np.array, margin=1,) -> np.array
     return cropped_image
 
 
-def improve_image_quality(image: np.array, threshold: str = "simple", verbose = True) -> np.array:
+def improve_image_quality(
+    image: np.array, threshold: str = "simple", verbose=True
+) -> np.array:
     """ improve the image quality for processing by OCR
 
     Args:

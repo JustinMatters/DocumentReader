@@ -69,7 +69,7 @@ if __name__ == "__main__":
             min_area=MIN_AREA,
             epsilon=EPSILON,
             contour_check=contour_check,
-            verbose = verbose
+            verbose=verbose,
         )
         if verbose:
             print(paper_contour)
@@ -98,13 +98,13 @@ if __name__ == "__main__":
             cv2.imshow("test_image", levelled_image)
         # COULD SAVE IMAGE TO DISC HERE
 
-        clean_paper = ocr.improve_image_quality(image=levelled_image, verbose = verbose)
+        clean_paper = ocr.improve_image_quality(image=levelled_image, verbose=verbose)
 
         # TBD text detection (fast and avoids trying to detect non existent text)
 
         # pass to tesseract for OCR
         ocr_text = pytesseract.image_to_string(clean_paper, lang="eng")
-        
+
         if verbose:
             print(preprocessed_image.shape)
             print(type(preprocessed_image))

@@ -115,6 +115,7 @@ def validate_save(save_path: str):
     else:
         raise NotADirectoryError("invalid save path specified")
 
+
 def validate_tesseract(tesseract_path: str):
     """ validate that the tesseract path is valid folder else raise an error
     
@@ -126,10 +127,11 @@ def validate_tesseract(tesseract_path: str):
     """
     if tesseract_path is None:
         return None
-    if os.path.isfile(tesseract_path) and tesseract_path[-13:] == 'tesseract.exe':
+    if os.path.isfile(tesseract_path) and tesseract_path[-13:] == "tesseract.exe":
         return tesseract_path
     else:
         raise FileNotFoundError("Location specified is not a tesseract.exe file")
+
 
 if __name__ == "__main__":
     # we don't expect to call this library direct, but just in case

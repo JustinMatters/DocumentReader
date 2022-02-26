@@ -20,7 +20,7 @@ class TestArgumentParser:
             (["file.jpg", "file2.jpg"], ["file.jpg", "file2.jpg"]),
             ([], []),
             (["-v"], []),
-            (["-s", "dir", "-v",  "-t", "dir2"], []),
+            (["-s", "dir", "-v", "-t", "dir2"], []),
         ],
     )
     def test_files_to_process_added_to_list(self, params_in, expected):
@@ -156,9 +156,9 @@ class TestValidateSave:
         mock_isdir.return_value = False
         with pytest.raises(Exception):
             arguments.validate_save(save_path="invalid")
-            
-class TestValidateTesseract:
 
+
+class TestValidateTesseract:
     @patch("os.path.isfile")
     def test_returns_none_when_passed_none(self, mock_isfile):
         mock_isfile.return_value = False
@@ -174,11 +174,11 @@ class TestValidateTesseract:
     @patch("os.path.isfile")
     def test_raises_error_for_invalid_path(self, mock_isfile):
         mock_isfile.return_value = False
-        with pytest.raises(FileNotFoundError): 
+        with pytest.raises(FileNotFoundError):
             arguments.validate_tesseract("invalid")
 
     @patch("os.path.isfile")
     def test_raises_error_for_non_tesseract_path(self, mock_isfile):
         mock_isfile.return_value = True
-        with pytest.raises(FileNotFoundError): 
+        with pytest.raises(FileNotFoundError):
             arguments.validate_tesseract("C:\\Program Files\\other.exe")
