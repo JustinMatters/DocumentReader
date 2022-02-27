@@ -2,9 +2,10 @@ import cv2
 import numpy as np
 import os
 import sys
+from typing import Union, List, Tuple
 
 
-def get_paths(*file_names: str):
+def get_paths(*file_names: str) -> Union[List[str], None]:
     """given a file string or list of file strings, returns a list of full paths
     to images
 
@@ -22,10 +23,7 @@ def get_paths(*file_names: str):
             files_list.append(full_path)
         return files_list
     else:
-        # TBD for now default to returning our test image
-        file_name = "data/business card.jpg"
-        full_path = os.path.abspath(file_name)
-        return [full_path]
+        raise FileNotFoundError("No valid input image files specified")
 
 
 def scale_longest_axis(image: np.array, new_size=512) -> np.array:
@@ -95,7 +93,7 @@ def preprocess_image(
 
 
 def get_contour_from_mask(
-    mask: np.array, min_area: int, epsilon: int, contour_check: np.array,
+    mask: np.array, min_area: int, epsilon: int, contour_check: np.array, verbose=True,
 ) -> np.array:
     """takes a black and white input image and returns the largest continuous
     quadrilateral contour found
@@ -131,7 +129,8 @@ def get_contour_from_mask(
             if len(simplified) == 4:
                 largest_quadrilateral = simplified
                 largest_area = area
-    cv2.imshow("contours", contour_check)  ###
+    if verbose:
+        cv2.imshow("contours", contour_check)  ###
     return largest_quadrilateral
 
 
@@ -160,7 +159,7 @@ def order_quadrilateral(quad: np.array) -> np.array:
     return ordered_quad
 
 
-def get_parallelogram_dimensions(quad: np.array) -> "tuple[int,int]":
+def get_parallelogram_dimensions(quad: np.array) -> Tuple[int, int]:
     """gets the width and height of a parallelogram whose corner coordinates
     are defined in a np.array((4,2)) 
 
@@ -212,7 +211,9 @@ def unwarp_quadrilateral(image: np.array, quad: np.array, margin=1,) -> np.array
     return cropped_image
 
 
-def improve_image_quality(image: np.array, threshold: str = "simple") -> np.array:
+def improve_image_quality(
+    image: np.array, threshold: str = "simple", verbose=True
+) -> np.array:
     """ improve the image quality for processing by OCR
 
     Args:
@@ -235,7 +236,8 @@ def improve_image_quality(image: np.array, threshold: str = "simple") -> np.arra
     )
     # denoise with a median blur
     median_image = cv2.medianBlur(large_image, ksize=3)
-    cv2.imshow("medianblur", median_image)
+    if verbose:
+        cv2.imshow("medianblur", median_image)
     # threshhold image see https://stackoverflow.com/questions/28763419/
     if threshold == "adaptive":
         threshold_image = cv2.adaptiveThreshold(
@@ -252,7 +254,8 @@ def improve_image_quality(image: np.array, threshold: str = "simple") -> np.arra
         )[1]
     else:
         threshold_image = cv2.threshold(median_image, 127, 255, cv2.THRESH_BINARY)[1]
-    cv2.imshow("threshold", threshold_image)
+    if verbose:
+        cv2.imshow("threshold", threshold_image)
     return threshold_image
 
 
