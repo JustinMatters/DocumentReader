@@ -76,7 +76,7 @@ class TestArgumentParser:
 
 
 class TestPathsToFiles:
-    """ Test class for arguments.argument_parser """
+    """ Test class for arguments.paths_to_files """
 
     @patch("os.path.isdir")
     @patch("os.path.isfile")
@@ -126,7 +126,7 @@ class TestPathsToFiles:
 
 
 class TestValidateSave:
-    """ Test class for arguments.argument_parser """
+    """ Test class for arguments.validate_save """
 
     @patch("os.path.isdir")
     @patch("os.getcwd")
@@ -159,6 +159,8 @@ class TestValidateSave:
 
 
 class TestValidateTesseract:
+    """ Test class for arguments.validate_tesseract """
+
     @patch("os.path.isfile")
     def test_returns_none_when_passed_none(self, mock_isfile):
         mock_isfile.return_value = False

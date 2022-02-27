@@ -2,9 +2,10 @@ import cv2
 import numpy as np
 import os
 import sys
+from typing import Union, List, Tuple
 
 
-def get_paths(*file_names: str):
+def get_paths(*file_names: str) -> Union[List[str], None]:
     """given a file string or list of file strings, returns a list of full paths
     to images
 
@@ -158,7 +159,7 @@ def order_quadrilateral(quad: np.array) -> np.array:
     return ordered_quad
 
 
-def get_parallelogram_dimensions(quad: np.array) -> "tuple[int,int]":
+def get_parallelogram_dimensions(quad: np.array) -> Tuple[int, int]:
     """gets the width and height of a parallelogram whose corner coordinates
     are defined in a np.array((4,2)) 
 

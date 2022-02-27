@@ -1,9 +1,11 @@
 import argparse
 import os
 import sys
+from typing import Union, List, Tuple
+from unittest.mock import NonCallableMock
 
 
-def argument_parser(args):
+def argument_parser(args: List[str]) -> Tuple[List[str], str, bool, str]:
     """ Use argparse to allow for the processing of input paths, a save location
     and adjusting the verbosity of the program. we pass args explicitly to
     simplify testing
@@ -59,7 +61,7 @@ def argument_parser(args):
     return image_paths, save_path, verbose, tesseract_path
 
 
-def paths_to_files(paths):
+def paths_to_files(paths) -> Union[List[str], None]:
     """ Convert our list of files and folders into a pure list of files. Folders
     are expanded to their constituent files (non-recursively) and all files are
     validated as image files by examining files extensions. Only valid files are
@@ -95,7 +97,7 @@ def paths_to_files(paths):
         raise FileNotFoundError("No valid input image files specified")
 
 
-def validate_save(save_path: str):
+def validate_save(save_path: str) -> Union[str, None]:
     """ Validate that a save path is a valid folder. If no save path was 
     specified then the current working directory will be returned. If an invalid
     save path is specified, a NotADirectoryError error is raised.
@@ -116,7 +118,7 @@ def validate_save(save_path: str):
         raise NotADirectoryError("invalid save path specified")
 
 
-def validate_tesseract(tesseract_path: str):
+def validate_tesseract(tesseract_path: str) -> Union[str, None]:
     """ validate that the tesseract path is valid folder else raise an error
     
     Args:
