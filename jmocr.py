@@ -116,16 +116,15 @@ if __name__ == "__main__":
         if save_path is not None:
             # use the existing filenames as a basis
             raw_file_name = os.path.splitext(os.path.basename(full_path))[0]
-            
+
             text_path = save_path + raw_file_name + "_ocr.txt"
-            with open (text_path, 'w') as text_file:
+            with open(text_path, "w") as text_file:
                 text_file.write(ocr_text)
             # ensure a novel name for the corrected image output
             image_path = save_path + raw_file_name + "_fix.png"
             cv2.imwrite(image_path, levelled_image)
             if verbose:
-                print(f'cleaned image written to {image_path}, ocr text to {text_path}')
-                
+                print(f"cleaned image written to {image_path}, ocr text to {text_path}")
 
         cv2.waitKey(WAIT_UNTIL_PRESSED)
         # cv2.destroyAllWindows()
