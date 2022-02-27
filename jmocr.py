@@ -110,13 +110,13 @@ if __name__ == "__main__":
             print(preprocessed_image.shape)
             print(type(preprocessed_image))
 
-        # output OCRed text
+        # output OCRed text (may be the only output with non-verbose non-save)
         print(ocr_text)
 
         if save_path is not None:
             # use the existing filenames as a basis
             raw_file_name = os.path.splitext(os.path.basename(full_path))[0]
-
+            # save our ocr text to a file
             text_path = save_path + raw_file_name + "_ocr.txt"
             with open(text_path, "w") as text_file:
                 text_file.write(ocr_text)
